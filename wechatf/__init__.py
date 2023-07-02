@@ -37,6 +37,14 @@ def get_login_qrcode():
     return q.get()
 
 
+def logout():
+    """
+    退出登录
+    :return:
+    """
+    return fj.logout()
+
+
 def get_message(block=True):
     """
     获取一条好友消息

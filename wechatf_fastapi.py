@@ -41,6 +41,19 @@ def get_login_qrcode():
         return {"msg": "微信已登录", "code": -1}
 
 
+@app.get("/logout")
+def logout():
+    """
+    退出微信
+    :return:
+    """
+    if not wechatf.is_login():
+        return {"msg": "微信未登录", "code": -1}
+
+    wechatf.logout()
+    return {"msg": "", "code": 0}
+
+
 @app.get("/get_contacts")
 def get_contacts():
     """
