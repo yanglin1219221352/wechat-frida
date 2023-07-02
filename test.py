@@ -42,4 +42,5 @@ def test_receive_send_message_getremarkname():
 
 if __name__ == '__main__':
     # test_send_msg()
+    print(wechatf.is_login())
     pass

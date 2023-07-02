@@ -10,6 +10,12 @@ from .frida_js import fj
 # 好友列表
 from .deal_recv_friend_list import friend_list
 
+def is_login():
+    """
+    是否登录
+    :return:
+    """
+    return fj.is_login()
 
 def get_message(block=True):
     """
