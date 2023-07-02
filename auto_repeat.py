@@ -2,6 +2,8 @@
 wechatf 例子
 自动回复
 """
+import os
+import tempfile
 import time
 import random
 
@@ -189,13 +191,48 @@ class DealMessage:
 deal_message = DealMessage()
 
 
-def main():
+def handle_message():
+    """
+    处理消息
+    :return:
+    """
     while True:
         # 取消息
         data = wechatf.get_message()
         if data:
             # 微信好友发来的消息
             deal_message.deal_message(data)
+
+
+def main():
+    # 判断是否登录
+    if not wechatf.is_login():
+        print("未登录,正在获取登录二维码")
+        # 刷新二维码
+        wechatf.goto_login_qrcode()
+
+        # 获取二维码
+        png_bytes = bytes.fromhex(wechatf.get_login_qrcode())
+
+        # png路径
+        png_path = os.path.join(tempfile.gettempdir(), "t.png")
+
+        # 写入文件
+        open(png_path, 'wb').write(png_bytes)
+
+        # 打开二维码
+        os.startfile(png_path)
+
+    # 直到登录再继续
+    while True:
+        if not wechatf.is_login():
+            time.sleep(3)
+            print("等待扫描登录...")
+        else:
+            break
+
+    print('微信已登录,等待消息...')
+    handle_message()
 
 
 if __name__ == '__main__':

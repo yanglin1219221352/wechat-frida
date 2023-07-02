@@ -16,7 +16,7 @@ rpc.exports.islogin = function () {
 
         // 获取偏移地址
         let flag = ModAddress.add(hook_info.offset).readU32()
-        console.log(flag)
+//        console.log(flag)
 
         return flag
     }catch(error){

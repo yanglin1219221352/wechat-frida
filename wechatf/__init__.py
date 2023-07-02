@@ -10,12 +10,32 @@ from .frida_js import fj
 # 好友列表
 from .deal_recv_friend_list import friend_list
 
+
 def is_login():
     """
     是否登录
     :return:
     """
     return fj.is_login()
+
+
+def goto_login_qrcode():
+    """
+    刷新二维码
+    :return:
+    """
+    return fj.goto_login_qrcode()
+
+
+def get_login_qrcode():
+    """
+    获取最新登录二维码
+    :return:
+    """
+    q = fj.get_js_msg_queue("recv_login_qrcode")
+
+    return q.get()
+
 
 def get_message(block=True):
     """
@@ -30,9 +50,9 @@ def get_message(block=True):
 
 def send_message(wxid, msg):
     """
-    发生消息
+    发送消息
     """
-    fj.send_message(wxid, msg)
+    return fj.send_message(wxid, msg)
 
 
 def get_contacts():
@@ -53,5 +73,3 @@ def get_remark_or_nick_name(wxid):
         return remark_name if remark_name else nick_name
     else:
         return None
-
-# uvicorn wechatf_fastapi_demo:app --reload

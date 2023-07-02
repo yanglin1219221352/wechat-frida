@@ -42,8 +42,6 @@ function build_call() {
 
 }
 
-// send_message("filehelper", "你好呀");
-
 rpc.exports.gotologinqrcode = function () {
     try{
         build_call()

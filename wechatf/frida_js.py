@@ -6,6 +6,7 @@ import queue
 from .frida_session import FridaSession
 from . import _debug_print
 
+
 class FridaJS:
     def __init__(self):
         # frida 连接
@@ -86,10 +87,16 @@ class FridaJS:
             raise Exception('该功能未实现')
 
         def sync_call(*args, **kwargs):
-            # 根据名称调用
-            getattr(script.exports_sync, func_name.replace("_", ""))(*args, **kwargs)
+            # 根据名称获取方法
+            _func = getattr(script.exports_sync, func_name.replace("_", ""))
+
+            # 调用方法
+            result = _func(*args, **kwargs)
+
             # 卸载脚本
             script.unload()
+
+            return result
 
         return sync_call
 
