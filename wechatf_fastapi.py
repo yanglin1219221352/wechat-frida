@@ -1,9 +1,10 @@
 """
 fastapi 使用 wechatf 例子
 """
+import io
 import time
 import random
-import io
+import functools
 
 import uvicorn
 from fastapi import FastAPI
@@ -12,6 +13,21 @@ from fastapi.responses import StreamingResponse
 app = FastAPI()
 
 import wechatf
+
+
+def check_is_login(func):
+    """
+    检查是否登录
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not wechatf.is_login():
+            return {"msg": "微信未登录", "code": -1}
+        else:
+            return func(*args, **kwargs)
+
+    return wrapper
 
 
 @app.get("/is_login")
@@ -30,9 +46,6 @@ def get_login_qrcode():
     :return:
     """
     if not wechatf.is_login():
-        # 刷新二维码
-        wechatf.goto_login_qrcode()
-
         # 获取二维码
         png_byte = bytes.fromhex(wechatf.get_login_qrcode())
 
@@ -42,43 +55,38 @@ def get_login_qrcode():
 
 
 @app.get("/logout")
+@check_is_login
 def logout():
     """
     退出微信
     :return:
     """
-    if not wechatf.is_login():
-        return {"msg": "微信未登录", "code": -1}
-
     wechatf.logout()
     return {"msg": "", "code": 0}
 
 
 @app.get("/get_contacts")
+@check_is_login
 def get_contacts():
     """
     获取联系人
     :return:
     """
-    if not wechatf.is_login():
-        return {"msg": "微信未登录", "code": -1}
-
     return {"msg": "", "code": 0, "data": wechatf.get_contacts()}
 
 
 @app.get("/get_message")
+@check_is_login
 def get_msg():
     """
     获取消息
     :return:
     """
-    if not wechatf.is_login():
-        return {"msg": "微信未登录", "code": -1}
-
     return {"msg": "", "code": 0, "data": wechatf.get_message(False)}
 
 
 @app.get("/send_message/{wxid}/{content}")
+@check_is_login
 def send_message(wxid: str, content: str):
     """
     发送消息
@@ -86,9 +94,6 @@ def send_message(wxid: str, content: str):
     :param content:
     :return:
     """
-    if not wechatf.is_login():
-        return {"msg": "微信未登录", "code": -1}
-
     # 延迟3-5秒
     time.sleep(random.randint(2, 6))
     wechatf.send_message(wxid, content)
@@ -96,7 +101,7 @@ def send_message(wxid: str, content: str):
 
 
 if __name__ == '__main__':
-    uvicorn.run('wechatf_fastapi_demo:app',
+    uvicorn.run('wechatf_fastapi:app',
                 host='127.0.0.1', port=8000,
                 reload=True, workers=1)
 

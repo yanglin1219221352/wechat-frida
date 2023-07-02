@@ -19,21 +19,21 @@ def is_login():
     return fj.is_login()
 
 
-def goto_login_qrcode():
-    """
-    刷新二维码
-    :return:
-    """
-    return fj.goto_login_qrcode()
-
-
 def get_login_qrcode():
     """
     获取最新登录二维码
     :return:
     """
+    # 获取消息队列
     q = fj.get_js_msg_queue("recv_login_qrcode")
 
+    # 清除以往记录
+    q.queue.clear()
+
+    # 刷新二维码
+    fj.goto_login_qrcode()
+
+    # 获取二维码
     return q.get()
 
 
