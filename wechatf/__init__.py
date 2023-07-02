@@ -37,6 +37,13 @@ def get_login_qrcode():
     return q.get()
 
 
+def get_user_info():
+    """
+    获取登录用户信息
+    """
+    return fj.get_login_user_info()
+
+
 def logout():
     """
     退出登录

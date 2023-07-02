@@ -54,6 +54,16 @@ def get_login_qrcode():
         return {"msg": "微信已登录", "code": -1}
 
 
+@app.get("/get_user_info")
+@check_is_login
+def get_user_info():
+    """
+    获取登录用户信息
+    :return:
+    """
+    return {"msg": "", "code": 0, "data": wechatf.get_user_info()}
+
+
 @app.get("/logout")
 @check_is_login
 def logout():
